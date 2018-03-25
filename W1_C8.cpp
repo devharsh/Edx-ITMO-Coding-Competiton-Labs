@@ -1,28 +1,57 @@
+// https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C8.cpp
+
 #include <iostream>
 #include <fstream>
+#include <map>
+
+// http://com.puter.tips/2018/03/c-array-declaration-stack-overflow.html
+// int kar[10000000];
 
 int main()
 {
 	std::ifstream ipfl;
-	std::ofstream opfl;
-
 	ipfl.open("input.txt");
-	opfl.open("output.txt");
+	int k;
+	ipfl >> k;
+	ipfl.close();
 
-	int n;
-	ipfl >> n;
+	std::map<int, int> kmap;
 
-	for (int i = 2; i < n; i++)
+	for (int d = 2; d <= k; d++)
 	{
-		for (int j = i + 1; j < n + 1; j++)
+		int cur_div = 0;
+		for (int i = 2; i <= d; i++)
 		{
-			if (j%i == 0)
-				jdiv++;
+			if (d%i == 0)
+			{
+				cur_div++;
+			}
+		}
+		kmap.insert(std::pair<int, int>(d, cur_div));
+	}
+
+	int currentMax = 0;
+	for (auto it = kmap.cbegin(); it != kmap.cend(); ++it)
+	{
+		if (it->second > currentMax)
+		{
+			currentMax = it->second;
 		}
 	}
 
-	ipfl.close();
-	opfl.close();
+	int minN = -1;
+	for (auto it = kmap.cbegin(); it != kmap.cend(); ++it)
+	{
+		if (it->second == currentMax)
+		{
+			minN = it->first;
+			break;
+		}
+	}
 
+	std::ofstream opfl;
+	opfl.open("output.txt");
+	opfl << k - minN + 1;
+	opfl.close();
 	return 0;
 }
