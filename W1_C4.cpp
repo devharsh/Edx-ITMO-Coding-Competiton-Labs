@@ -4,10 +4,7 @@
 int main()
 {
 	std::ifstream ipfl;
-	std::ofstream opfl;
-
 	ipfl.open("input.txt");
-	opfl.open("output.txt");
 
 	int n;
 
@@ -17,97 +14,110 @@ int main()
 	ipfl >> n;
 
 	for (int i = 0; i < n; i++)
-	{
 		ipfl >> tarr[i];
-	}
 	for (int i = 0; i < n; i++)
-	{
 		ipfl >> parr[i];
-	}
 
-	int max = 0;
+	ipfl.close();
 
-	bool tarr_count = false;
-	bool parr_count = false;
+	bool tcnt = false, pcnt = false;
+	int sum[5] = { 0,0,0,0,0 };
 
 	for (int i = 0; i < n; i++)
 	{
 		if (tarr[i] > parr[i])
 		{
-			tarr_count = true;
-			max += tarr[i];
+			sum[0] += tarr[i];
+			tcnt = true;
 		}
 		else
 		{
-			parr_count = true;
-			max += parr[i];
+			sum[0] += parr[i];
+			pcnt = true;
 		}
 	}
 
-	if (!tarr_count)
+	sum[1] = sum[0];
+	sum[2] = sum[0];
+	if (!tcnt)
 	{
-		int pind = 0;
+		int tmax = -1;
+		int tmindiff = 1001;
+		int tmxind = -1;
 
-		for (int i = 1; i < n; i++)
+		for (int i = 0; i < n; i++)
 		{
-			if (parr[i] < parr[i + 1] && parr[i] < parr[pind])
-				pind = i;
-			else if (parr[i + 1] < parr[i] && parr[i + 1] < parr[pind])
-				pind = i + 1;
+			if (tarr[i] >= tmax && parr[i] - tarr[i] < tmindiff)
+			{
+				tmax = tarr[i];
+				tmindiff = parr[i] - tarr[i];
+				tmxind = i;
+			}
 		}
+		sum[1] -= parr[tmxind];
+		sum[1] += tarr[tmxind];
 
-		int max_1 = max - parr[pind];
-		max_1 += tarr[pind];
+		int pmin = 1001;
+		int pmindiff = 1001;
+		int pmnind = -1;
 
-		int tind = 0;
-
-		for (int i = 1; i < n; i++)
+		for (int i = 0; i < n; i++ && parr[i] - tarr[i] < pmindiff)
 		{
-			if (tarr[i] > tarr[i + 1] && tarr[i] > tarr[tind])
-				tind = i;
-			else if (tarr[i + 1] > tarr[i] && tarr[i + 1] > tarr[tind])
-				tind = i + 1;
+			if (parr[i] < pmin)
+			{
+				pmin = parr[i];
+				pmindiff = parr[i] - tarr[i];
+				pmnind = i;
+			}
 		}
+		sum[2] -= parr[pmnind];
+		sum[2] += tarr[pmnind];
 
-		int max_2 = max - parr[tind];
-		max_2 += tarr[tind];
-
-		max_1 > max_2 ? max = max_1 : max = max_2;
+		sum[0] = sum[1] > sum[2] ? sum[1] : sum[2];
 	}
-	else if (!parr_count)
+
+	sum[3] = sum[0];
+	sum[4] = sum[0];
+	if (!pcnt)
 	{
-		int tind = 0;
+		int pmax = -1;
+		int pmindiff = 1001;
+		int pmxind = -1;
 
-		for (int i = 1; i < n; i++)
+		for (int i = 0; i < n; i++)
 		{
-			if (tarr[i] < tarr[i + 1] && tarr[i] < tarr[tind])
-				tind = i;
-			else if (tarr[i + 1] < tarr[i] && tarr[i + 1] < tarr[tind])
-				tind = i + 1;
+			if (parr[i] > pmax && tarr[i] - parr[i] < pmindiff)
+			{
+				pmax = parr[i];
+				pmindiff = tarr[i] - parr[i];
+				pmxind = i;
+			}
 		}
+		sum[3] -= tarr[pmxind];
+		sum[3] += parr[pmxind];
 
-		int max_1 = max - tarr[tind];
-		max_1 += parr[tind];
+		int tmin = 1001;
+		int tmindiff = 1001;
+		int tmnind = -1;
 
-		int pind = 0;
-
-		for (int i = 1; i < n; i++)
+		for (int i = 0; i < n; i++)
 		{
-			if (parr[i] > parr[i + 1] && parr[i] > parr[pind])
-				pind = i;
-			else if (parr[i + 1] > parr[i] && parr[i + 1] > parr[pind])
-				pind = i + 1;
+			if (tarr[i] < tmin && tarr[i] - parr[i] < tmindiff)
+			{
+				tmin = tarr[i];
+				tmindiff = tarr[i] - parr[i];
+				tmnind = i;
+			}
 		}
+		sum[4] -= tarr[tmnind];
+		sum[4] += parr[tmnind];
 
-		int max_2 = max - tarr[pind];
-		max_2 += parr[pind];
-
-		max_1 > max_2 ? max = max_1 : max = max_2;
+		sum[0] = sum[3] > sum[4] ? sum[3] : sum[4];
 	}
 
-	opfl << max;
-
-	ipfl.close();
+	std::ofstream opfl;
+	opfl.open("output.txt");
+	opfl << sum[0];
 	opfl.close();
 
 	return 0;
