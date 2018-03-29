@@ -1,10 +1,17 @@
 #include <iostream>
 #include <fstream>
-#include <map>
 #include <math.h>
 
-// http://com.puter.tips/2018/03/c-array-declaration-stack-overflow.html
-// int kar[10000000];
+int NoD[10000001];
+
+void sieve(int lmt)
+{
+	for (int i = 2; i <= lmt; i++)
+	{
+		for (int j = i; j <= lmt; j += i)
+			NoD[j]++;
+	}
+}
 
 int main()
 {
@@ -14,46 +21,22 @@ int main()
 	ipfl >> k;
 	ipfl.close();
 
-	std::map<int, int> kmap;
-
-	for (int d = 2; d <= k; d++)
-	{
-		int cur_div = 0;
-		int sd = static_cast<int>(sqrt(d)) + 1;
-		for (int i = 1; i < sd; i++)
-		{
-			if (d % i == 0)
-			{
-				cur_div += 2;
-				if (i*i == d)
-					cur_div--;
-			}
-		}
-		kmap.insert(std::pair<int, int>(d, cur_div));
-	}
+	sieve(k);
 
 	int currentMax = 0;
-	for (auto it = kmap.cbegin(); it != kmap.cend(); ++it)
+	int maxIndex = 0;
+	for (int d = 2; d <= k; d++)
 	{
-		if (it->second > currentMax)
-			currentMax = it->second;
-	}
-
-	int minN = -1;
-	for (auto it = kmap.cbegin(); it != kmap.cend(); ++it)
-	{
-		if (it->second == currentMax)
+		if (NoD[d] > currentMax)
 		{
-			minN = it->first;
-			break;
+			maxIndex = d - 1;
+			currentMax = NoD[d];
 		}
 	}
 
 	std::ofstream opfl;
 	opfl.open("output.txt");
-
-	opfl << k - minN + 1 << std::endl;
-
+	opfl << k - maxIndex;
 	opfl.close();
 	return 0;
 }
