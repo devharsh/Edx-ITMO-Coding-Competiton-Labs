@@ -23,20 +23,16 @@ int main()
 
 	sieve(k);
 
-	int currentMax = 0;
 	int maxIndex = 0;
 	for (int d = 2; d <= k; d++)
 	{
-		if (NoD[d] > currentMax)
-		{
-			maxIndex = d - 1;
-			currentMax = NoD[d];
-		}
+		if (NoD[d] > NoD[maxIndex])
+			maxIndex = d;
 	}
 
 	std::ofstream opfl;
 	opfl.open("output.txt");
-	opfl << k - maxIndex;
+	opfl << k - maxIndex + 1;
 	opfl.close();
 	return 0;
 }
