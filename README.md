@@ -2,7 +2,7 @@
 
 # Edx-ITMO-Coding-Competiton-Labs
 
-### 1st Week Problmes
+### 1st Week Problems
 1. [A + B](https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C1.cpp)
 2. [A + B^2](https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C2.cpp)
 3. [Three-bonacci](https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C3.cpp)
