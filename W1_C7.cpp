@@ -2,20 +2,15 @@
 #include <fstream>
 #include <string>
 #include <map>
-#include <math.h>
-#include <vector>
-
-#pragma warning(disable:4996)
+#include <algorithm>
 
 int main()
 {
 	std::ifstream ipfl;
 	ipfl.open("input.txt");
 
-	std::map<char, int> keyMapX;
-	std::map<char, int> keyMapY;
-	std::map<std::string, double> langMap;
-	std::vector<std::string> insertOrder;
+	std::map<char, std::pair<int, int>> keyMap;
+	std::pair<std::string, int> langMap[3];
 
 	int width, height;
 	ipfl >> width >> height;
@@ -26,85 +21,60 @@ int main()
 		{
 			char c;
 			ipfl >> c;
-			keyMapX.insert(std::make_pair(c, h));
-			keyMapY.insert(std::make_pair(c, w));
+			keyMap[c] = { w, h };
 		}
 	}
 
 	std::string str("%TEMPLATE-START%");
 	std::string end("%TEMPLATE-END%");
-	std::string lang = "";
-	std::string temp = "";
 
-	std::getline(ipfl, temp); // remove CRLF from previous line
-
-	double gmin = std::numeric_limits<double>::max();
-
-	while (ipfl)
+	for (int f = 0; f < 3; f++)
 	{
-		std::getline(ipfl, lang); // name of the language
-		std::getline(ipfl, temp); // remove start of template from calculation
-		char allKeys[100000] = {};
-		int akind = 0;
-		bool doit = false;
-		while (ipfl)
-		{
-			doit = true;
-			std::getline(ipfl, temp);
-			if (temp.find(end) == std::string::npos)
-			{
-				char tempkeys[1000];
-				size_t n = temp.length();
-				strcpy(tempkeys, temp.c_str());
+		ipfl >> langMap[f].first;
+		std::string langCode = "";
 
-				for (int i = 0; i < n; i++)
-				{
-					if (int(tempkeys[i]) == 32)
-						continue;
-					allKeys[akind] = tempkeys[i];
-					akind++;
-				}
-			}
-			else
+		while (1)
+		{
+			std::string temp = "";
+			ipfl >> temp;
+			if (temp.find(str) != std::string::npos)
+				continue;
+			if (temp.find(end) != std::string::npos)
 				break;
+			langCode += temp;
 		}
 
-		if (doit)
-		{
-			double tsum = 0;
-			if (akind > 1)
-			{
-				for (int i = 1; i < akind; i++)
-				{
-					int x1 = keyMapX.at(allKeys[i - 1]);
-					int y1 = keyMapY.at(allKeys[i - 1]);
-					int x2 = keyMapX.at(allKeys[i]);
-					int y2 = keyMapY.at(allKeys[i]);
-					double diff = std::fmax(abs(x1 - x2), abs(y1 - y2));
-					tsum += diff;
-				}
-			}
+		int tsum = 0;
 
-			if (tsum < gmin)
-				gmin = tsum;
-			langMap[lang] = tsum;
-			insertOrder.push_back(lang);
+		for (int i = 1; i < langCode.length(); i++)
+		{
+			int x1 = keyMap[langCode[i - 1]].first;
+			int y1 = keyMap[langCode[i - 1]].second;
+			int x2 = keyMap[langCode[i]].first;
+			int y2 = keyMap[langCode[i]].second;
+			int diff = std::max(abs(x1 - x2), abs(y1 - y2));
+			tsum += diff;
+		}
+
+		langMap[f].second = tsum;
+	}
+
+	std::string mlan = "";
+	double gmin = std::numeric_limits<int>::max();
+
+	for (int b = 0; b < 3; b++)
+	{
+		if (langMap[b].second < gmin)
+		{
+			gmin = langMap[b].second;
+			mlan = langMap[b].first;
 		}
 	}
 
 	ipfl.close();
 	std::ofstream opfl;
 	opfl.open("output.txt");
-
-	for (int i = 0; i < insertOrder.size(); ++i)
-	{
-		if (langMap.at(insertOrder[i]) == gmin)
-		{
-			opfl << insertOrder[i] << "\n" << gmin;
-			break;
-		}
-	}
-
+	opfl << mlan << "\n" << gmin;
 	opfl.close();
 	return 0;
 }
