@@ -1,17 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include <math.h>
 
 int NoD[10000001];
-
-void sieve(int lmt)
-{
-	for (int i = 2; i <= lmt; i++)
-	{
-		for (int j = i; j <= lmt; j += i)
-			NoD[j]++;
-	}
-}
 
 int main()
 {
@@ -21,13 +11,13 @@ int main()
 	ipfl >> k;
 	ipfl.close();
 
-	sieve(k);
-
 	int maxIndex = 0;
-	for (int d = 2; d <= k; d++)
+	for (int i = 2; i <= k; i++)
 	{
-		if (NoD[d] > NoD[maxIndex])
-			maxIndex = d;
+		for (int j = i; j <= k; j += i)
+			NoD[j]++;
+		if (NoD[i] > NoD[maxIndex])
+			maxIndex = i;
 	}
 
 	std::ofstream opfl;
