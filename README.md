@@ -8,7 +8,7 @@
 3. [Three-bonacci](https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C3.cpp)
 4. [Prepare Yourself to Competitions!](https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C4.cpp)
 5. [Create a Team!](https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C5.cpp)
-6. Put the Chairs the Right Way!
+6. [Put the Chairs the Right Way!](https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C6.cpp)
 7. [Write a Code Template!](https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C7.cpp)
 8. [Generate Tests!](https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C8_3.cpp)
 9. [Win the Competition!](https://github.com/devharsh/Edx-ITMO-Coding-Competiton-Labs/blob/master/W1_C9.cpp)
